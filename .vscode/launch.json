@@ -1,0 +1,44 @@
+{
+    // See https://go.microsoft.com/fwlink/?linkid=830387 for more about launch.json configuration
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (API)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Api/bin/Debug/net9.0/Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Api",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "Now listening on: (https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Api/Views"
+            }
+        },
+        {
+            "name": "React WebApp",
+            "type": "msedge",
+            "request": "launch",
+            "url": "https://localhost:5173",
+            "webRoot": "${workspaceFolder}/WebApp",
+            "preLaunchTask": "webapp: dev"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack (API + WebApp)",
+            "configurations": [
+                ".NET Core Launch (API)",
+                "React WebApp"
+            ]
+        }
+    ]
+}
