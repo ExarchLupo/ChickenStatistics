@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { ChickenDto } from '../types';
 import { API_BASE_URL } from '../api';
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions,
+  TextField,
+  Button,
+  Box
+} from '@mui/material';
 
 interface Props {
   chicken: ChickenDto | null;
@@ -28,24 +37,37 @@ export const WeightForm: React.FC<Props> = ({ chicken, onClose, onWeightAdded })
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Add Weight for {chicken.name}</h3>
-      <input
-        type="number"
-        step="0.01"
-        placeholder="Weight (kg)"
-        value={weight}
-        onChange={e => setWeight(e.target.value)}
-        required
-      />
-      <input
-        type="date"
-        value={date}
-        onChange={e => setDate(e.target.value)}
-        required
-      />
-      <button type="submit">Add Weight</button>
-      <button type="button" onClick={onClose}>Cancel</button>
-    </form>
+    <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth>
+      <form onSubmit={handleSubmit}>
+        <DialogTitle>Gewicht für {chicken.name} hinzufügen</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, my: 2 }}>            <TextField
+              type="number"
+              label="Gewicht (kg)"
+              value={weight}
+              onChange={e => setWeight(e.target.value)}
+              fullWidth
+              required
+              variant="outlined"
+              inputProps={{ step: "0.01" }}
+            />
+            <TextField
+              type="date"
+              label="Datum"
+              value={date}
+              onChange={e => setDate(e.target.value)}
+              fullWidth
+              required
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Abbrechen</Button>
+          <Button type="submit" variant="contained" color="primary">Hinzufügen</Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };

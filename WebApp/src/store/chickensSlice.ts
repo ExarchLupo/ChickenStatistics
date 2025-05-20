@@ -16,6 +16,15 @@ export const addChicken = createAsyncThunk('chickens/addChicken', async (chicken
   return (await res.json()) as ChickenDto;
 });
 
+export const updateChicken = createAsyncThunk('chickens/updateChicken', async (chicken: ChickenDto) => {
+  const res = await fetch(`${API_BASE_URL}/chickens/${chicken.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(chicken)
+  });
+  return (await res.json()) as ChickenDto;
+});
+
 export interface ChickensState {
   chickens: ChickenDto[];
   loading: boolean;
@@ -41,6 +50,12 @@ const chickensSlice = createSlice({
       .addCase(fetchChickens.rejected, state => { state.loading = false; })
       .addCase(addChicken.fulfilled, (state, action: PayloadAction<ChickenDto>) => {
         state.chickens.push(action.payload);
+      })
+      .addCase(updateChicken.fulfilled, (state, action: PayloadAction<ChickenDto>) => {
+        const index = state.chickens.findIndex(chicken => chicken.id === action.payload.id);
+        if (index !== -1) {
+          state.chickens[index] = action.payload;
+        }
       });
   }
 });

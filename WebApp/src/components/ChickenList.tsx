@@ -4,14 +4,26 @@ import { RootState } from '../store';
 import { ChickenDto } from '../types';
 import { fetchChickens } from '../store/chickensSlice';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import Button from '@mui/material/Button';
+import { 
+  Button, 
+  IconButton, 
+  Stack, 
+  Tooltip, 
+  Typography, 
+  Box,
+  Paper
+} from '@mui/material';
 import WeightChart from './WeightChart';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 interface Props {
   onAddWeight: (chicken: ChickenDto) => void;
+  onEdit: (chicken: ChickenDto) => void;
 }
 
-export const ChickenList: React.FC<Props> = ({ onAddWeight }) => {
+export const ChickenList: React.FC<Props> = ({ onAddWeight, onEdit }) => {
   const dispatch = useDispatch();
   const chickens = useSelector((state: RootState) => state.chickens.chickens);
   const loading = useSelector((state: RootState) => state.chickens.loading);
@@ -46,10 +58,35 @@ export const ChickenList: React.FC<Props> = ({ onAddWeight }) => {
       headerName: 'Aktionen',
       flex: 1,
       renderCell: (params: any) => (
-        <>
-          <Button variant="contained" size="small" onClick={() => { setSelectedChicken(params.row); setOpenChart(true); }}>Gewichtsverlauf</Button>
-          <Button variant="outlined" size="small" style={{ marginLeft: 8 }} onClick={() => onAddWeight(params.row)}>Gewicht hinzufügen</Button>
-        </>
+        <Stack direction="row" spacing={1}>
+          <Tooltip title="Bearbeiten">
+            <IconButton 
+              size="small" 
+              color="primary" 
+              onClick={() => onEdit(params.row)}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Gewichtsverlauf anzeigen">
+            <IconButton 
+              size="small" 
+              color="info" 
+              onClick={() => { setSelectedChicken(params.row); setOpenChart(true); }}
+            >
+              <TimelineIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Gewicht hinzufügen">
+            <IconButton 
+              size="small" 
+              color="success" 
+              onClick={() => onAddWeight(params.row)}
+            >
+              <AddIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       ),
       sortable: false,
       filterable: false,
@@ -57,8 +94,10 @@ export const ChickenList: React.FC<Props> = ({ onAddWeight }) => {
   ];
 
   return (
-    <div style={{ width: '100%', height: 500 }}>
-      <h2>Chickens</h2>
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        Chicken Übersicht
+      </Typography>
       <DataGrid
         rows={chickens}
         columns={columns}
@@ -66,14 +105,34 @@ export const ChickenList: React.FC<Props> = ({ onAddWeight }) => {
         loading={loading}
         pageSizeOptions={[10, 20, 50]}
         autoHeight
+        sx={{
+          '& .MuiDataGrid-cell:hover': {
+            backgroundColor: 'rgba(85, 139, 47, 0.04)',
+          },
+          '& .MuiDataGrid-row:hover': {
+            backgroundColor: 'rgba(85, 139, 47, 0.08)',
+          },
+          mb: 4
+        }}
       />
+      
       {selectedChicken && openChart && (
-        <div style={{ marginTop: 24 }}>
-          <h3>Gewichtsverlauf von {selectedChicken.name}</h3>
+        <Paper elevation={2} sx={{ p: 3, mt: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Gewichtsverlauf von {selectedChicken.name}
+          </Typography>
           <WeightChart weights={selectedChicken.weights || []} />
-          <Button variant="text" onClick={() => setOpenChart(false)}>Schließen</Button>
-        </div>
+          <Box sx={{ mt: 2, textAlign: 'right' }}>
+            <Button 
+              variant="outlined" 
+              onClick={() => setOpenChart(false)}
+              sx={{ mt: 2 }}
+            >
+              Schließen
+            </Button>
+          </Box>
+        </Paper>
       )}
-    </div>
+    </Box>
   );
 };

@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addChicken, fetchChickens } from '../store/chickensSlice';
+import { 
+  TextField, 
+  Button, 
+  Grid, 
+  Typography,
+  Box
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 interface Props {
   onCreated?: () => void;
@@ -18,17 +26,59 @@ export const ChickenForm: React.FC<Props> = ({ onCreated }) => {
     setName('');
     setBreed('');
     setDateOfBirth('');
-    dispatch(fetchChickens());
+    await dispatch(fetchChickens() as any);
     onCreated && onCreated();
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Add Chicken</h2>
-      <input placeholder="Name" value={name} onChange={e => setName(e.target.value)} required />
-      <input placeholder="Breed" value={breed} onChange={e => setBreed(e.target.value)} required />
-      <input type="date" value={dateOfBirth} onChange={e => setDateOfBirth(e.target.value)} required />
-      <button type="submit">Add</button>
+      <Typography variant="h5" gutterBottom>Neue Chicken hinzufügen</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={4}>
+          <TextField 
+            label="Name" 
+            value={name} 
+            onChange={e => setName(e.target.value)} 
+            required 
+            fullWidth
+            variant="outlined"
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <TextField 
+            label="Rasse" 
+            value={breed} 
+            onChange={e => setBreed(e.target.value)} 
+            required 
+            fullWidth
+            variant="outlined"
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <TextField 
+            type="date" 
+            label="Geburtsdatum" 
+            value={dateOfBirth} 
+            onChange={e => setDateOfBirth(e.target.value)} 
+            required 
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            variant="outlined"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Box mt={2}>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              startIcon={<AddIcon />}
+            >
+              Hinzufügen
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
     </form>
   );
 };
