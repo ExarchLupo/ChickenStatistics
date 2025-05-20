@@ -1,3 +1,8 @@
+# Base instructions
+- Create the full MVP, don't stop until it's done! 
+- Don't wait for my feedback, don't ask whether to continue.
+- Create it in this current folder / workspace, not a new folder.
+
 - Kreate a WebApp use node.js 22, vite for the WebApp
 - WebApp is a single page application (SPA) using React and TypeScript
 - Use Redux for state management
