@@ -92,11 +92,10 @@ export const ChickenList: React.FC<Props> = ({ onAddWeight, onEdit }) => {
       filterable: false,
     },
   ];
-
   return (
     <Box>
       <Typography variant="h5" gutterBottom>
-        Chicken Übersicht
+        Meine Chickens
       </Typography>
       <DataGrid
         rows={chickens}

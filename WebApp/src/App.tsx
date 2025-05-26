@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Provider } from 'react-redux';
 import store from './store';
 import { ChickenList } from './components/ChickenList';
-import { ChickenForm } from './components/ChickenForm';
+import { AddChickenDialog } from './components/AddChickenDialog';
 import { WeightForm } from './components/WeightForm';
 import { EditChickenForm } from './components/EditChickenForm';
 import { ChickenDto } from './types';
@@ -16,7 +16,10 @@ import {
   CssBaseline,
   AppBar,
   Toolbar,
+  Button,
+  Fab
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -51,6 +54,7 @@ const theme = createTheme({
 const App: React.FC = () => {
   const [showWeightForm, setShowWeightForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const [selectedChicken, setSelectedChicken] = useState<ChickenDto | null>(null);
 
   return (
@@ -75,10 +79,6 @@ const App: React.FC = () => {
               Chicken Statistics
             </Typography>
             
-            <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-              <ChickenForm />
-            </Paper>
-            
             <Paper elevation={3} sx={{ p: 3 }}>
               <ChickenList
                 onAddWeight={chicken => {
@@ -91,6 +91,23 @@ const App: React.FC = () => {
                 }}
               />
             </Paper>
+            
+            <Box sx={{ mt: 3, textAlign: 'center' }}>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                size="large"
+                startIcon={<AddIcon />}
+                onClick={() => setShowAddDialog(true)}
+                sx={{ 
+                  px: 4, 
+                  py: 1.5,
+                  fontSize: '1.1rem'
+                }}
+              >
+                Neue Chicken hinzufügen
+              </Button>
+            </Box>
             
             {showWeightForm && (
               <WeightForm
@@ -105,6 +122,24 @@ const App: React.FC = () => {
               open={showEditForm}
               onClose={() => setShowEditForm(false)}
             />
+              <AddChickenDialog
+              open={showAddDialog}
+              onClose={() => setShowAddDialog(false)}
+            />
+            
+            {/* Floating Action Button als Alternative */}
+            <Fab 
+              color="primary" 
+              aria-label="add chicken"
+              sx={{ 
+                position: 'fixed', 
+                bottom: 16, 
+                right: 16 
+              }}
+              onClick={() => setShowAddDialog(true)}
+            >
+              <AddIcon />
+            </Fab>
           </Box>
         </Container>
       </ThemeProvider>
